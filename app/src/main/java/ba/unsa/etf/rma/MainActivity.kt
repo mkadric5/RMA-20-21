@@ -14,14 +14,14 @@ class MainActivity : AppCompatActivity() {
 
         val btnApply = findViewById<Button>(R.id.apply)
 
-        btnApply.setOnClickListener {
-            showMessage()
-        }
+//        btnApply.setOnClickListener {
+//            showMessage()
+//        }
     }
 
-    private fun showMessage() {
-        val message = findViewById<EditText>(R.id.unos).text.toString()
-        findViewById<TextView>(R.id.ispis).text=message
-    }
+//    private fun showMessage() {
+//        val message = findViewById<EditText>(R.id.unos).text.toString()
+//        findViewById<TextView>(R.id.ispis).text=message
+//    }
 }
 
