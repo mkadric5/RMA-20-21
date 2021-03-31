@@ -1,6 +1,5 @@
 package ba.unsa.etf.rma
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,84 +9,73 @@ import android.widget.*
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.unsa.etf.rma.data.Movie
+import ba.unsa.etf.rma.viewmodel.MovieListViewModel
 
-class CustomAdapter(private val dataSet: ArrayList<String>) :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class MyAdapter(private val dataSet: List<Movie>) :
+    RecyclerView.Adapter<MyAdapter.ViewHolder>() {
     /**
      *Klasa za pružanje referenci na sve elemente view-a
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView
+        val titleMovie: TextView
+        val imageMovie: ImageView
         init {
             // Definisanje akcija na elemente
-            textView = view.findViewById(R.id.textView3)
+            titleMovie = view.findViewById(R.id.movieTitle)
+            imageMovie = view.findViewById(R.id.movieImage)
         }
     }
     // Kreiraj novi view
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Kreiraj novi view koji definiše UI elementa liste
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.list_item, viewGroup, false)
+            .inflate(R.layout.item_movie, viewGroup, false)
         return ViewHolder(view)
     }
     // Izmijeni sadržaj view-a
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Pokupi element iz skupa podataka i zamijeni
         //sadržaj View sa odgovarajućim
-        viewHolder.textView.text = dataSet[position]
+        viewHolder.titleMovie.text = dataSet[position].title
+        val movieGenre = dataSet[position].genre
+        val context = viewHolder.imageMovie.context
+        var id: Int = context.resources.getIdentifier(movieGenre,"drawable", context.packageName)
+        if (id == 0) viewHolder.imageMovie.setImageResource(R.drawable.movie)
+        else viewHolder.imageMovie.setImageResource(id)
     }
     // Vrati veličinu skupa
     override fun getItemCount() = dataSet.size
 }
 
-class MyAdapter(context: Context, @LayoutRes private val layoutResource: Int, private val elements: ArrayList<String>):
-        ArrayAdapter<String>(context, layoutResource, elements) {
-    override fun getView(position: Int, newView: View?, parent: ViewGroup): View {
-        var newView = newView
-        newView = LayoutInflater.from(context).inflate(R.layout.list_item, parent,
-            false)
-        val textView = newView.findViewById<TextView>(R.id.textView3)
-        val element = elements.get(position)
-        textView.text=element
-        return newView
-    }
-}
-
 class MainActivity : AppCompatActivity() {
-    private lateinit var btnApply: Button
-    private lateinit var unosFld: EditText
-    private lateinit var recycleView: RecyclerView
-    private val listaVrijednosti = arrayListOf<String>();
-    private lateinit var adapter: CustomAdapter
+    private lateinit var searchBtn: Button
+    private lateinit var searchFld: EditText
+    private lateinit var favoriteMoviesView: RecyclerView
+    private lateinit var recentMoviesView: RecyclerView
+    private lateinit var favoriteMoviesAdapter: MyAdapter
+    private lateinit var recentMoviesAdapter: MyAdapter
+    private var movieListViewModel: MovieListViewModel = MovieListViewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnApply = findViewById(R.id.apply)
-        unosFld = findViewById(R.id.unos)
-        recycleView = findViewById(R.id.listView1)
-        recycleView.setLayoutManager(LinearLayoutManager(this))
+        favoriteMoviesView = findViewById(R.id.favoriteMoviesList)
+        recentMoviesView = findViewById(R.id.recentMoviesList)
 
-        napuniListu()
+        favoriteMoviesAdapter = MyAdapter(movieListViewModel.getFavoriteMovies())
+        recentMoviesAdapter = MyAdapter(movieListViewModel.getRecentMovies())
 
-        adapter = CustomAdapter(listaVrijednosti)
-        recycleView.adapter = adapter
+        favoriteMoviesView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recentMoviesView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        btnApply.setOnClickListener {
-            insertInList()
-        }
-    }
+        favoriteMoviesView.adapter = favoriteMoviesAdapter
+        recentMoviesView.adapter = recentMoviesAdapter
 
-    private fun napuniListu() {
-        for (i in 1..20)
-        listaVrijednosti.add("jabuka")
-    }
-
-    private fun insertInList() {
-        listaVrijednosti.add(0, unosFld.text.toString())
-        adapter.notifyDataSetChanged()
-        unosFld.setText("")
+        favoriteMoviesAdapter.notifyDataSetChanged()
+        recentMoviesAdapter.notifyDataSetChanged()
     }
 }
 
