@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Moja aplikacija</string>
     <string name="favMovies">Najdraži filmovi</string>
     <string name="recMovies">Nedavni filmovi</string>
 </resources>
