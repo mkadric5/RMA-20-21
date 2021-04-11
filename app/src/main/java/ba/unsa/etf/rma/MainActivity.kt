@@ -1,22 +1,23 @@
 package ba.unsa.etf.rma
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.data.Movie
-import ba.unsa.etf.rma.viewmodel.MovieListViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MyAdapter(
-    private val dataSet: List<Movie>,
+class MovieListAdapter(
+    private var dataSet: List<Movie>,
     private val onItemClicked: (movie:Movie) -> Unit
-) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     /**
      *Klasa za pružanje referenci na sve elemente view-a
      */
@@ -51,66 +52,69 @@ class MyAdapter(
     }
     // Vrati veličinu skupa
     override fun getItemCount() = dataSet.size
+
+    fun updateMovies(movies: List<Movie>) {
+        dataSet = movies
+    }
 }
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var searchBtn: ImageButton
-    private lateinit var searchFld: EditText
-    private lateinit var favoriteMoviesView: RecyclerView
-    private lateinit var recentMoviesView: RecyclerView
-    private lateinit var favoriteMoviesAdapter: MyAdapter
-    private lateinit var recentMoviesAdapter: MyAdapter
-    private var movieListViewModel: MovieListViewModel = MovieListViewModel()
+    private lateinit var bottomNavigation: BottomNavigationView
+
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_favorites -> {
+                val favoritesFragment = FavoriteMoviesFragment.newInstance()
+                openFragment(favoritesFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_recent -> {
+                val recentFragments = RecentMoviesFragment.newInstance()
+                openFragment(recentFragments)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_search -> {
+                val searchFragment = SearchFragment.newInstance("")
+                openFragment(searchFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        searchBtn = findViewById(R.id.searchBtn)
-        searchFld = findViewById(R.id.searchFld)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        bottomNavigation = findViewById(R.id.navigationBar)
+        bottomNavigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        favoriteMoviesView = findViewById(R.id.favoriteMoviesList)
-        recentMoviesView = findViewById(R.id.recentMoviesList)
 
-        favoriteMoviesAdapter = MyAdapter(movieListViewModel.getFavoriteMovies()) { movie -> showMovieDetails(movie) }
-        recentMoviesAdapter = MyAdapter(movieListViewModel.getRecentMovies()) {movie -> showMovieDetails(movie)}
+        //Default fragment
+        bottomNavigation.selectedItemId = R.id.navigation_favorites
+        val favoritesFragment = FavoriteMoviesFragment.newInstance()
+        openFragment(favoritesFragment)
 
-        favoriteMoviesView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recentMoviesView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        favoriteMoviesView.adapter = favoriteMoviesAdapter
-        recentMoviesView.adapter = recentMoviesAdapter
-
-        favoriteMoviesAdapter.notifyDataSetChanged()
-        recentMoviesAdapter.notifyDataSetChanged()
-
-        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
-            handleSendText(intent)
-
-        searchBtn.setOnClickListener {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                //putExtra(Intent.EXTRA_TEXT, "textMessage")
-                type = "text/plain"
-            }
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            }
-        }
+//        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
+//            handleSendText(intent)
     }
 
-    private fun handleSendText(intent: Intent) {
-        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-            searchFld.setText(it)
-        }
-    }
+//    private fun handleSendText(intent: Intent?) {
+//        intent?.getStringExtra(Intent.EXTRA_TEXT)?.let {
+//            bottomNavigation.selectedItemId = R.id.navigation_search
+//            val searchFragment = SearchFragment.newInstance(it)
+//            openFragment(searchFragment)
+//        }
+//    }
 
-    private fun showMovieDetails(movie: Movie) {
-        val intent = Intent(this, MovieDetailActivity::class.java).apply {
-            putExtra("movie_title",movie.title)
-        }
-        startActivity(intent)
+    //Funkcija za izmjenu fragmenta
+    private fun openFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
 

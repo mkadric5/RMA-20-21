@@ -7,85 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/searchFld"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@android:string/search_go"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/searchBtn"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/searchBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/transparent"
-        android:tint="@color/teal_700"
-        app:layout_constraintBottom_toBottomOf="@+id/searchFld"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintHorizontal_weight="0.5"
-        app:layout_constraintStart_toEndOf="@id/searchFld"
-        app:layout_constraintTop_toTopOf="@+id/searchFld"
-        app:srcCompat="@drawable/ic_search" />
-
-    <TextView
-        android:id="@+id/textFMovies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/favMovies"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/teal_700"
-        app:layout_constraintEnd_toEndOf="@+id/searchFld"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchFld" />
+        app:layout_constraintTop_toBottomOf="@id/container"
+        app:menu="@menu/navigation" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favoriteMoviesList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchFld"
-        app:layout_constraintHorizontal_bias="0.0"
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigationBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textFMovies" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textRMovies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/recMovies"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/teal_700"
-        app:layout_constraintEnd_toEndOf="@+id/searchFld"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/favoriteMoviesList" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recentMoviesList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/searchFld"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRMovies" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

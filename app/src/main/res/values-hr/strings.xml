@@ -1,4 +1,7 @@
 <resources>
-    <string name="favMovies">Najdraži filmovi</string>
-    <string name="recMovies">Nedavni filmovi</string>
+    <string name="MyFavoritesText">Moji najdraži filmovi</string>
+    <string name="MyRecentText">Moji nedavni filmovi</string>
+    <string name="recentMovies">Nedavni filmovi</string>
+    <string name="favoriteMovies">Najdraži filmovi</string>
+    <string name="search">Pretraga</string>
 </resources>
