@@ -4,8 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.data.Movie
 import ba.unsa.etf.rma.viewmodel.MovieDetailViewModel
 import org.w3c.dom.Text
@@ -19,6 +22,8 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var genre : TextView
     private lateinit var website : TextView
     private lateinit var poster : ImageView
+    private lateinit var glumciLista: ListView
+    private lateinit var glumciListaAdapter: ArrayAdapter<String>
 
 
 
@@ -32,6 +37,7 @@ class MovieDetailActivity : AppCompatActivity() {
         genre = findViewById(R.id.movie_genre)
         website = findViewById(R.id.movie_website)
         poster = findViewById(R.id.movie_poster)
+        glumciLista = findViewById(R.id.glumciLista)
 
         val extras = intent.extras
 
@@ -42,6 +48,10 @@ class MovieDetailActivity : AppCompatActivity() {
         else {
             finish()
         }
+
+        glumciListaAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,
+            listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving"))
+        glumciLista.adapter = glumciListaAdapter
 
         website.setOnClickListener {
             showWebsite()

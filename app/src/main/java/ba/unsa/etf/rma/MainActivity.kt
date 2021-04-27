@@ -2,9 +2,11 @@ package ba.unsa.etf.rma
 
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MovieListAdapter(
     private var dataSet: List<Movie>,
-    private val onItemClicked: (movie:Movie) -> Unit
+    private val onItemClicked: (movie:Movie, view1: View, view2: View) -> Unit
 ) : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     /**
      *Klasa za pružanje referenci na sve elemente view-a
@@ -48,7 +50,7 @@ class MovieListAdapter(
         if (id == 0) viewHolder.imageMovie.setImageResource(R.drawable.movie)
         else viewHolder.imageMovie.setImageResource(id)
 
-        viewHolder.itemView.setOnClickListener{ onItemClicked(dataSet[position]) }
+        viewHolder.itemView.setOnClickListener{ onItemClicked(dataSet[position],viewHolder.imageMovie,viewHolder.titleMovie )}
     }
     // Vrati veličinu skupa
     override fun getItemCount() = dataSet.size
@@ -85,6 +87,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(window) {
+            requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+
+            sharedElementExitTransition = Fade()
+            exitTransition = Fade()
+        }
+
         setContentView(R.layout.activity_main)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

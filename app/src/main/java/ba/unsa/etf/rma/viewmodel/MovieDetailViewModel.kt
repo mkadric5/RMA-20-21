@@ -12,4 +12,8 @@ class MovieDetailViewModel {
         val movie = movies.find{movie -> movie.title.equals(name)}
         return movie?:Movie(0,"Test","Test","Test","Test","Test")
     }
+
+    fun getActorsByTitle(movieTitle: String): List<String> {
+        return listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving")
+    }
 }
