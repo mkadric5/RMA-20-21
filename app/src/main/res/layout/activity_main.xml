@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/container"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation_main" />
 
     <FrameLayout
         android:id="@+id/container"

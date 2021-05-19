@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma
+package ba.unsa.etf.rma.view
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.unsa.etf.rma.MovieDetailActivity
+import ba.unsa.etf.rma.R
 import ba.unsa.etf.rma.data.Movie
 import ba.unsa.etf.rma.viewmodel.MovieListViewModel
 import android.util.Pair as UtilPair
@@ -16,7 +18,7 @@ import android.util.Pair as UtilPair
 class FavoriteMoviesFragment: Fragment() {
     private lateinit var favoriteMovies: RecyclerView
     private lateinit var favoriteMoviesAdapter: MovieListAdapter
-    private var movieListViewModel = MovieListViewModel()
+    private var movieListViewModel = MovieListViewModel(null,null)
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,13 +37,11 @@ class FavoriteMoviesFragment: Fragment() {
 
     private fun showMovieDetails(movie: Movie, view1: View, view2: View) {
         val intent = Intent(activity, MovieDetailActivity::class.java).apply {
-            putExtra("movie_title", movie.title)
+            putExtra("movie_id", movie.id)
         }
 
-//        val options = ActivityOptions.makeSceneTransitionAnimation(activity, UtilPair.create(view1,"poster"),
-//            UtilPair.create(view2,"title"))
-//
-//        startActivity(intent, options.toBundle())
-        startActivity(intent)
+        val options = ActivityOptions.makeSceneTransitionAnimation(activity, UtilPair.create(view1,"poster"),
+            UtilPair.create(view2,"title"))
+        startActivity(intent, options.toBundle())
     }
 }

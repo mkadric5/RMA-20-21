@@ -7,6 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/movie_backdrop"
             android:layout_width="0dp"
@@ -14,23 +15,23 @@
             app:layout_constraintBottom_toBottomOf="@+id/backdrop_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/backdrop" />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/movie_poster_card"
-            android:layout_width="128dp"
-            android:layout_height="172dp"
+            android:layout_width="115dp"
+            android:layout_height="154dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
             app:cardCornerRadius="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/backdrop_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backdrop_guideline">
+
             <ImageView
                 android:id="@+id/movie_poster"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:transitionName="poster"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:transitionName="poster" />
         </androidx.cardview.widget.CardView>
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/backdrop_guideline"
@@ -86,6 +87,7 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="movie_release_date,movie_poster_card,movie_genre,movie_website"
             tools:layout_editor_absoluteY="379dp" />
+
         <TextView
             android:id="@+id/movie_overview"
             android:layout_width="match_parent"
@@ -93,23 +95,34 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster_title_barrier"
             tools:textSize="16sp" />
 
-        <ListView
-            android:id="@+id/glumciLista"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/navigation_detail" />
+
+        <FrameLayout
+            android:id="@+id/frameDetail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/navigation_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/movie_overview" />
+            app:layout_constraintTop_toBottomOf="@id/movie_overview">
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

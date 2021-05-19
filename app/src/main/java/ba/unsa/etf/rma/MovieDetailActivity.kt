@@ -1,31 +1,43 @@
 package ba.unsa.etf.rma
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
 import ba.unsa.etf.rma.data.Movie
+import ba.unsa.etf.rma.view.AdditionalInfoFragment
 import ba.unsa.etf.rma.viewmodel.MovieDetailViewModel
-import org.w3c.dom.Text
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MovieDetailActivity : AppCompatActivity() {
-    private var movieDetailViewModel = MovieDetailViewModel()
-    private lateinit var movie: Movie
+    private var movieDetailViewModel = MovieDetailViewModel(this@MovieDetailActivity::populateDetails,null)
+    private var movieId: Long = 0
     private lateinit var title: TextView
     private lateinit var overview: TextView
     private lateinit var date: TextView
     private lateinit var genre : TextView
     private lateinit var website : TextView
     private lateinit var poster : ImageView
-    private lateinit var glumciLista: ListView
-    private lateinit var glumciListaAdapter: ArrayAdapter<String>
+    private lateinit var backDrop: ImageView
+    private lateinit var navBar: BottomNavigationView
+    private val posterPath = "https://image.tmdb.org/t/p/w342"
+    private val backdropPath = "https://image.tmdb.org/t/p/w500"
 
-
+//    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+//        when (item.itemId) {
+//            R.id.navigation_actors -> {
+//                val actorsFragment = ActorsFragment.newInstance(movieId)
+//                openFragment(actorsFragment,"actors")
+//                return@OnNavigationItemSelectedListener true
+//            }
+//            R.id.navigation_similar_movies -> {
+//                return@OnNavigationItemSelectedListener true
+//            }
+//        }
+//        false
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +49,38 @@ class MovieDetailActivity : AppCompatActivity() {
         genre = findViewById(R.id.movie_genre)
         website = findViewById(R.id.movie_website)
         poster = findViewById(R.id.movie_poster)
-        glumciLista = findViewById(R.id.glumciLista)
+        backDrop = findViewById(R.id.movie_backdrop)
+        navBar = findViewById(R.id.navigation_detail)
 
         val extras = intent.extras
 
         if (extras != null) {
-            movie = movieDetailViewModel.getMovieByTitle(extras.getString("movie_title",""))
-            populateDetails(movie)
+            movieDetailViewModel.getMovieDetails(extras.getLong("movie_id",0L))
+            movieId = extras.getLong("movie_id",0L)
         }
         else {
             finish()
         }
 
-        glumciListaAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,
-            listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving"))
-        glumciLista.adapter = glumciListaAdapter
+        navBar.setOnNavigationItemSelectedListener {item ->
+            when (item.itemId) {
+                R.id.navigation_actors -> {
+                    val actorsFragment = AdditionalInfoFragment.newInstance(movieId)
+                    openFragment(actorsFragment,"actors")
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.navigation_similar_movies -> {
+                    val actorsFragment = AdditionalInfoFragment.newInstance(movieId)
+                    openFragment(actorsFragment,"similar movies")
+                    return@setOnNavigationItemSelectedListener true
+                }
+                else -> return@setOnNavigationItemSelectedListener false
+            }
+        }
+
+//        glumciListaAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,
+//            listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving"))
+//        glumciLista.adapter = glumciListaAdapter
 
         website.setOnClickListener {
             showWebsite()
@@ -62,25 +91,37 @@ class MovieDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun openFragment(fragment: Fragment,tag: String) {
+        val transaction = supportFragmentManager.beginTransaction()
+        val naStacku = supportFragmentManager.findFragmentByTag(tag)
+        if (naStacku != null)
+            transaction.replace(R.id.frameDetail,naStacku,tag)
+        else {
+            transaction.replace(R.id.frameDetail,fragment,tag)
+            transaction.addToBackStack(tag)
+        }
+        transaction.commit()
+    }
+
     private fun openVideoTrailer() {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEARCH
-            setPackage("com.google.android.youtube")
-            putExtra("query", movie.title + " trailer")
-        }
-        if (sendIntent.resolveActivity(packageManager) != null) {
-            startActivity(sendIntent)
-        }
+//        val sendIntent = Intent().apply {
+//            action = Intent.ACTION_SEARCH
+//            setPackage("com.google.android.youtube")
+//            putExtra("query", movie.title + " trailer")
+//        }
+//        if (sendIntent.resolveActivity(packageManager) != null) {
+//            startActivity(sendIntent)
+//        }
     }
 
     private fun showWebsite() {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_VIEW
-            data = Uri.parse(movie.homepage)
-        }
-        if (sendIntent.resolveActivity(packageManager) != null) {
-            startActivity(sendIntent)
-        }
+//        val sendIntent = Intent().apply {
+//            action = Intent.ACTION_VIEW
+//            data = Uri.parse(movie.homepage)
+//        }
+//        if (sendIntent.resolveActivity(packageManager) != null) {
+//            startActivity(sendIntent)
+//        }
     }
 
     private fun populateDetails(movie: Movie) {
@@ -90,10 +131,26 @@ class MovieDetailActivity : AppCompatActivity() {
         genre.text = movie.genre
         website.text = movie.homepage
 
-        val context = poster.context
-        var id: Int = context.resources.getIdentifier(movie.genre, "drawable", context.packageName)
-        if (id == 0) id=context.resources
-            .getIdentifier("movie", "drawable", context.packageName)
+        val posterContext = poster.context
+        var id: Int = posterContext.resources.getIdentifier(movie.genre, "drawable", posterContext.packageName)
+        if (id == 0) id = posterContext.resources
+            .getIdentifier("movie", "drawable", posterContext.packageName)
         poster.setImageResource(id)
+        Glide.with(posterContext)
+            .load(posterPath + movie.posterPath)
+            .centerCrop()
+            .placeholder(R.drawable.movie)
+            .error(id)
+            .fallback(id)
+            .into(poster)
+
+        val backdropContext = backDrop.context
+        Glide.with(backdropContext)
+            .load(backdropPath + movie.backdropPath)
+            .centerCrop()
+            .placeholder(R.drawable.backdrop)
+            .error(R.drawable.backdrop)
+            .fallback(R.drawable.backdrop)
+            .into(backDrop)
     }
 }
