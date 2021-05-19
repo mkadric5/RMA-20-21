@@ -50,7 +50,6 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
             // Prikaže se rezultat korisniku na glavnoj niti
             when (result) {
                 is Result.Success<List<String>> -> actorsRetrieved?.invoke(result.data)
-//                else -> Log.v("meh","meh")
                 else -> println(id)
             }
         }
@@ -63,8 +62,7 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
             // Prikaže se rezultat korisniku na glavnoj niti
             when (result) {
                 is Result.Success<List<String>> -> actorsRetrieved?.invoke(result.data)
-//                else -> Log.v("meh","meh")
-                else -> println(id)
+                else -> Log.v("meh","meh")
             }
         }
     }
