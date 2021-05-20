@@ -1,7 +1,9 @@
 package ba.unsa.etf.rma
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -104,14 +106,15 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun openVideoTrailer() {
-//        val sendIntent = Intent().apply {
-//            action = Intent.ACTION_SEARCH
-//            setPackage("com.google.android.youtube")
-//            putExtra("query", movie.title + " trailer")
-//        }
-//        if (sendIntent.resolveActivity(packageManager) != null) {
-//            startActivity(sendIntent)
-//        }
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEARCH
+            setPackage("com.google.android.youtube")
+            val movie = movieDetailViewModel.getMovieById(movieId)
+            putExtra("query", movie.title + " trailer")
+        }
+        if (sendIntent.resolveActivity(packageManager) != null) {
+            startActivity(sendIntent)
+        }
     }
 
     private fun showWebsite() {
@@ -138,7 +141,6 @@ class MovieDetailActivity : AppCompatActivity() {
         poster.setImageResource(id)
         Glide.with(posterContext)
             .load(posterPath + movie.posterPath)
-            .centerCrop()
             .placeholder(R.drawable.movie)
             .error(id)
             .fallback(id)

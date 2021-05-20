@@ -70,4 +70,16 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
     fun getActorsByTitle(movieTitle: String): List<String> {
         return listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving")
     }
+
+    fun getMovieById(id: Long): Movie {
+        var movie = Movie(0,"test","test","test","test","test","test","test")
+        scope.launch{
+            // Vrši se poziv servisa i suspendira se rutina dok se `withContext` ne završi
+            // Prikaže se rezultat korisniku na glavnoj niti
+            val result = MovieRepository.movieDetailsRequest(id)
+            if (result is Result.Success<Movie>)
+                movie = result.data
+        }
+        return movie
+    }
 }
