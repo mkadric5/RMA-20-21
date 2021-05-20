@@ -1,13 +1,13 @@
 package ba.unsa.etf.rma.data
 
+import com.google.gson.annotations.SerializedName
+
 data class Movie (
-    var id: Long,
-    var title: String,
-    var overview: String,
-    var releaseDate: String,
-    var homepage: String?,
-    var genre: String?,
-    var posterPath: String?,
-    var backdropPath: String?
-                  ) {
-}
+    @SerializedName("id") var id: Long,
+    @SerializedName("title")  var title: String,
+    @SerializedName("overview")  var overview: String,
+    @SerializedName("release_date")   var releaseDate: String,
+    @SerializedName("homepage")   var homepage: String?,
+    @SerializedName("poster_path") var posterPath: String?,
+    @SerializedName("backdrop_path")  var backdropPath: String?
+)
