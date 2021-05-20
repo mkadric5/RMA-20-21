@@ -11,6 +11,7 @@ import ba.unsa.etf.rma.data.Movie
 import ba.unsa.etf.rma.view.AdditionalInfoFragment
 import ba.unsa.etf.rma.viewmodel.MovieDetailViewModel
 import com.bumptech.glide.Glide
+import com.example.cinaeste.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MovieDetailActivity : AppCompatActivity() {
