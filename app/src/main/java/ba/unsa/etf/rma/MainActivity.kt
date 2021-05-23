@@ -1,5 +1,7 @@
 package ba.unsa.etf.rma
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.transition.Fade
 import android.view.LayoutInflater
@@ -63,6 +65,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.selectedItemId = R.id.navigation_favorites
         val favoritesFragment = FavoriteMoviesFragment.newInstance()
         openFragment(favoritesFragment,"favorites")
+
+        Intent(this, LatestMovieService::class.java).also {
+        //Različito pokretanje u ovisnosti od verzije
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(it)
+                return
+            }
+            startService(it)
+        }
 
 //        if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
 //            handleSendText(intent)
