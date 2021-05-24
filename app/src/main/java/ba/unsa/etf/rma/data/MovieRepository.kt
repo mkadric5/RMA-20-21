@@ -66,4 +66,12 @@ object MovieRepository {
             return@withContext responseBody
         }
     }
+
+    suspend fun getUpcomingMovies(
+    ) : GetMoviesResponse?{
+        return withContext(Dispatchers.IO) {
+            var response = ApiAdapter.retrofit.getUpcomingMovies()
+            return@withContext response.body()
+        }
+    }
 }
