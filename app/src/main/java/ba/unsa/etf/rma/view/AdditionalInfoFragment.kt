@@ -22,7 +22,7 @@ class AdditionalInfoFragment(val movieId: Long): Fragment() {
         itemsList.adapter = itemsListAdapter
 
         if (tag == "actors")
-            movieDetailViewModel.getActorsById(movieId)
+            movieDetailViewModel.getMovieActors(movieId)
         else if (tag == "similar movies")
             movieDetailViewModel.getSimilarMovies(movieId)
 

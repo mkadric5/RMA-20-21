@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MovieDetailActivity : AppCompatActivity() {
     private var movieDetailViewModel = MovieDetailViewModel(this@MovieDetailActivity::populateDetails,null)
-    private var movieId: Long = 0
     private lateinit var title: TextView
     private lateinit var overview: TextView
     private lateinit var date: TextView
@@ -24,22 +24,10 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var poster : ImageView
     private lateinit var backDrop: ImageView
     private lateinit var navBar: BottomNavigationView
+    private var movie: Movie? = null
     private val posterPath = "https://image.tmdb.org/t/p/w342"
     private val backdropPath = "https://image.tmdb.org/t/p/w500"
 
-//    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-//        when (item.itemId) {
-//            R.id.navigation_actors -> {
-//                val actorsFragment = ActorsFragment.newInstance(movieId)
-//                openFragment(actorsFragment,"actors")
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_similar_movies -> {
-//                return@OnNavigationItemSelectedListener true
-//            }
-//        }
-//        false
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +46,6 @@ class MovieDetailActivity : AppCompatActivity() {
 
         if (extras != null) {
             movieDetailViewModel.getMovieDetails(extras.getLong("movie_id",0L))
-            movieId = extras.getLong("movie_id",0L)
         }
         else {
             finish()
@@ -67,22 +54,18 @@ class MovieDetailActivity : AppCompatActivity() {
         navBar.setOnNavigationItemSelectedListener {item ->
             when (item.itemId) {
                 R.id.navigation_actors -> {
-                    val actorsFragment = AdditionalInfoFragment.newInstance(movieId)
+                    val actorsFragment = AdditionalInfoFragment.newInstance(movie!!.id)
                     openFragment(actorsFragment,"actors")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_similar_movies -> {
-                    val actorsFragment = AdditionalInfoFragment.newInstance(movieId)
+                    val actorsFragment = AdditionalInfoFragment.newInstance(movie!!.id)
                     openFragment(actorsFragment,"similar movies")
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }
         }
-
-//        glumciListaAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,
-//            listOf("Leonardo DiCaprio","Keanu Reeves","Tom Cruise","Morgan Freeman","Natalie Portman","Hugo Weaving"))
-//        glumciLista.adapter = glumciListaAdapter
 
         website.setOnClickListener {
             showWebsite()
@@ -106,36 +89,43 @@ class MovieDetailActivity : AppCompatActivity() {
     }
 
     private fun openVideoTrailer() {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEARCH
-            setPackage("com.google.android.youtube")
-            val movie = movieDetailViewModel.getMovieById(movieId)
-            putExtra("query", movie.title + " trailer")
-        }
-        if (sendIntent.resolveActivity(packageManager) != null) {
-            startActivity(sendIntent)
+        if (movie != null) {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEARCH
+                setPackage("com.google.android.youtube")
+                putExtra("query", movie!!.title + " trailer")
+            }
+            if (sendIntent.resolveActivity(packageManager) != null) {
+                startActivity(sendIntent)
+            }
         }
     }
 
     private fun showWebsite() {
-//        val sendIntent = Intent().apply {
-//            action = Intent.ACTION_VIEW
-//            data = Uri.parse(movie.homepage)
-//        }
-//        if (sendIntent.resolveActivity(packageManager) != null) {
-//            startActivity(sendIntent)
-//        }
+        if (movie != null) {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse(movie!!.homepage)
+            }
+            if (sendIntent.resolveActivity(packageManager) != null) {
+                startActivity(sendIntent)
+            }
+        }
     }
 
     private fun populateDetails(movie: Movie) {
+        this.movie = movie
         title.text = movie.title
         overview.text = movie.overview
         date.text = movie.releaseDate
-        genre.text = movie.genre
+//        genre.text = movie.genre
+        if (movie.homepage != null)
         website.text = movie.homepage
+        else website.text = "website"
 
         val posterContext = poster.context
-        var id: Int = posterContext.resources.getIdentifier(movie.genre, "drawable", posterContext.packageName)
+//        var id: Int = posterContext.resources.getIdentifier(movie.genre, "drawable", posterContext.packageName)
+        var id: Int = posterContext.resources.getIdentifier("movie", "drawable", posterContext.packageName)
         if (id == 0) id = posterContext.resources
             .getIdentifier("movie", "drawable", posterContext.packageName)
         poster.setImageResource(id)

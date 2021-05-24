@@ -2,24 +2,23 @@ package ba.unsa.etf.rma.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 data class Movie (
-    var id: Long,
-    var title: String,
-    var overview: String,
-    var releaseDate: String,
-    var homepage: String?,
-    var genre: String?,
-    var posterPath: String?,
-    var backdropPath: String?
+    @SerializedName("id") var id: Long,
+    @SerializedName("title")  var title: String,
+    @SerializedName("overview")  var overview: String,
+    @SerializedName("release_date")   var releaseDate: String,
+    @SerializedName("poster_path") var posterPath: String?,
+    @SerializedName("backdrop_path")  var backdropPath: String?,
+    var homepage: String? = null
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readString(),
-        parcel.readString(),
+//        parcel.readString(),
         parcel.readString()!!,
         parcel.readString()!!)
 
@@ -28,8 +27,8 @@ data class Movie (
         parcel.writeString(title)
         parcel.writeString(overview)
         parcel.writeString(releaseDate)
-        parcel.writeString(homepage)
-        parcel.writeString(genre)
+//        parcel.writeString(homepage)
+//        parcel.writeString(genre)
         parcel.writeString(posterPath)
         parcel.writeString(backdropPath)
     }

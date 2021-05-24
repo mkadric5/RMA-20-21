@@ -10,7 +10,7 @@ import ba.unsa.etf.rma.data.Movie
 import com.bumptech.glide.Glide
 
 class MovieDetailResultActivity : AppCompatActivity() {
-    private  var movie = Movie(0, "Test", "Test", "Test", "Test", "Test", "Test", "Test")
+    private  var movie = Movie(0, "Test", "Test", "Test", "Test", "Test")
     private lateinit var title : TextView
     private lateinit var overview : TextView
     private lateinit var releaseDate : TextView
@@ -42,15 +42,17 @@ class MovieDetailResultActivity : AppCompatActivity() {
     private fun populateDetails() {
         title.text = movie.title
         releaseDate.text = movie.releaseDate
-        genre.text = movie.genre
-        website.text = movie.homepage
+//        genre.text = movie.genre
+//        website.text = movie.homepage
+        website.text = "website"
         overview.text = movie.overview
         val context: Context = poster.context
         var id = 0
-        if (movie.genre != null)
-            id = context.resources
-                .getIdentifier(movie.genre, "drawable", context.packageName)
-        if (id == 0) id=context.resources
+//        if (movie.genre != null)
+//            id = context.resources
+//                .getIdentifier(movie.genre, "drawable", context.packageName)
+//        if (id == 0)
+            id=context.resources
             .getIdentifier("picture1", "drawable", context.packageName)
         Glide.with(context)
             .load(posterPath + movie.posterPath)

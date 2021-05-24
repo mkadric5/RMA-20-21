@@ -34,8 +34,9 @@ class MovieListAdapter(
         //Pokupi element iz skupa podataka i zamijeni
         //sadržaj View sa odgovarajućim
         viewHolder.titleMovie.text = dataSet[position].title
-        var movieGenre = dataSet[position].genre
-        if (movieGenre == null) movieGenre = "thriller"
+//        var movieGenre = dataSet[position].genre
+//        if (movieGenre == null) movieGenre = "thriller"
+        val movieGenre = "thriller"
         val context = viewHolder.imageMovie.context
         val id: Int = context.resources.getIdentifier(movieGenre,"drawable", context.packageName)
         if (id == 0) viewHolder.imageMovie.setImageResource(R.drawable.movie)

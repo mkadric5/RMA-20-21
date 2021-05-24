@@ -30,7 +30,7 @@ class LatestMovieService : Service() {
     //api ključ
     private val tmdb_api_key : String = BuildConfig.TMDB_API_KEY
     //primjer filma- novi filmovi ne moraju sadržavati sve podatke
-    private var movie = Movie(1,"test","test","test","test","test","test","test")
+    private var movie = Movie(1,"test","test","test","test","test")
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -83,7 +83,7 @@ class LatestMovieService : Service() {
                 movie.title = jsonObject.getString("title")
                 movie.id = jsonObject.getLong("id")
                 movie.releaseDate = jsonObject.getString("release_date")
-                movie.homepage = jsonObject.getString("homepage")
+//                movie.homepage = jsonObject.getString("homepage")
                 movie.overview = jsonObject.getString("overview")
                 //Radi očuvanja pristojnosti
                 if (!jsonObject.getBoolean("adult")) {
