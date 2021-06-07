@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.data
 
+import android.content.Context
 import ba.unsa.etf.rma.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,8 +19,24 @@ sealed class Result<out R> {
 object MovieRepository {
     private const val tmdb_api_key = BuildConfig.TMDB_API_KEY
 
-    fun getFavoriteMovies(): List<Movie> {
-        return favoriteMovies()
+    suspend fun getFavoriteMovies(context: Context) : List<Movie> {
+        return withContext(Dispatchers.IO) {
+            var db = AppDatabase.getInstance(context)
+            var movies = db!!.movieDao().getAll()
+            return@withContext movies
+        }
+    }
+    suspend fun writeFavorite(context: Context,movie:Movie) : String?{
+        return withContext(Dispatchers.IO) {
+            try{
+                var db = AppDatabase.getInstance(context)
+                db!!.movieDao().insertAll(movie)
+                return@withContext "success"
+            }
+            catch(error:Exception){
+                return@withContext null
+            }
+        }
     }
 
     fun getRecentMovies(): List<Movie> {

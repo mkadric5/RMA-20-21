@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.viewmodel
 
+import android.content.Context
 import android.util.Log
 import ba.unsa.etf.rma.data.*
 import kotlinx.coroutines.CoroutineScope
@@ -11,14 +12,15 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
                            private val actorsRetrieved: ((actors: List<String>) -> Unit)?) {
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
-    fun getMovieByTitle(name: String): Movie {
-        val movies:ArrayList<Movie> = arrayListOf()
-        movies.addAll(MovieRepository.getFavoriteMovies())
-        movies.addAll(MovieRepository.getRecentMovies())
 
-        val movie = movies.find{movie -> movie.title == name }
-        return movie?:Movie(0,"Test","Test","Test","Test",null)
-    }
+//    fun getMovieByTitle(name: String): Movie {
+//        val movies:ArrayList<Movie> = arrayListOf()
+//        movies.addAll(MovieRepository.getFavoriteMovies())
+//        movies.addAll(MovieRepository.getRecentMovies())
+//
+//        val movie = movies.find{movie -> movie.title == name }
+//        return movie?:Movie(0,"Test","Test","Test","Test",null)
+//    }
 
     fun getMovieDetails(id: Long) {
         val movies: ArrayList<Movie> = arrayListOf()
@@ -79,5 +81,16 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
                 movie = result
         }
         return movie
+    }
+
+    fun writeDB(context: Context, movie:Movie, onSuccess: (movies: String) -> Unit,
+                onError: () -> Unit){
+        scope.launch{
+            val result = MovieRepository.writeFavorite(context,movie)
+            when (result) {
+                is String -> onSuccess?.invoke(result)
+                else-> onError?.invoke()
+            }
+        }
     }
 }

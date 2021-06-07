@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.viewmodel
 
+import android.content.Context
 import ba.unsa.etf.rma.data.GetMoviesResponse
 import ba.unsa.etf.rma.data.Movie
 import ba.unsa.etf.rma.data.MovieRepository
@@ -40,8 +41,15 @@ class MovieListViewModel(private val searchDone: ((movies: List<Movie>) -> Unit)
     }
 
 
-        fun getFavoriteMovies(): List<Movie> {
-        return MovieRepository.getFavoriteMovies()
+    fun getFavorites(context: Context, onSuccess: (movies: List<Movie>) -> Unit,
+                     onError: () -> Unit){
+        scope.launch{
+            val result = MovieRepository.getFavoriteMovies(context)
+            when (result) {
+                is List<Movie> -> onSuccess?.invoke(result)
+                else-> onError?.invoke()
+            }
+        }
     }
 
     fun getRecentMovies(): List<Movie> {

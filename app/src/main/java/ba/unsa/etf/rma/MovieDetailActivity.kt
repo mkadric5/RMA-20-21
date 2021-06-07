@@ -5,8 +5,11 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ba.unsa.etf.rma.data.Movie
 import ba.unsa.etf.rma.view.AdditionalInfoFragment
@@ -24,6 +27,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var poster : ImageView
     private lateinit var backDrop: ImageView
     private lateinit var navBar: BottomNavigationView
+    private lateinit var addTOFav: Button
     private var movie: Movie? = null
     private val posterPath = "https://image.tmdb.org/t/p/w342"
     private val backdropPath = "https://image.tmdb.org/t/p/w500"
@@ -41,6 +45,7 @@ class MovieDetailActivity : AppCompatActivity() {
         poster = findViewById(R.id.movie_poster)
         backDrop = findViewById(R.id.movie_backdrop)
         navBar = findViewById(R.id.navigation_detail)
+        addTOFav = findViewById(R.id.addToFavBtn)
 
         val extras = intent.extras
 
@@ -74,6 +79,24 @@ class MovieDetailActivity : AppCompatActivity() {
         title.setOnClickListener {
             openVideoTrailer()
         }
+
+        addTOFav.setOnClickListener{
+            writeDB()
+        }
+    }
+
+    fun writeDB(){
+        movieDetailViewModel.writeDB(applicationContext,this.movie!!,onSuccess = ::onSuccess1,
+            onError = ::onError)
+    }
+    fun onSuccess1(message:String){
+        val toast = Toast.makeText(applicationContext, "Spaseno", Toast.LENGTH_SHORT)
+        toast.show()
+        addTOFav.visibility = View.GONE
+    }
+    fun onError() {
+        val toast = Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT)
+        toast.show()
     }
 
     private fun openFragment(fragment: Fragment,tag: String) {
