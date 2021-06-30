@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = arrayOf(Movie::class), version = 1)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun movieDao(): MovieDao
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -18,6 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return INSTANCE!!
         }
+
         private fun buildRoomDB(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,

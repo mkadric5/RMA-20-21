@@ -10,7 +10,7 @@ import ba.unsa.etf.rma.data.Movie
 import com.bumptech.glide.Glide
 
 class MovieDetailResultActivity : AppCompatActivity() {
-    private  var movie = Movie(0, "Test", "Test", "Test", "Test", "Test")
+    private  var movie = Movie(0, "Test", "Test", "Test", "Test", "Test","test")
     private lateinit var title : TextView
     private lateinit var overview : TextView
     private lateinit var releaseDate : TextView
@@ -34,10 +34,10 @@ class MovieDetailResultActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(123)
 
-        if(intent?.getParcelableExtra<Movie>("movie") != null) {
-            movie = intent?.getParcelableExtra<Movie>("movie")!!
-            populateDetails()
-        }
+//        if(intent?.getParcelableExtra<Movie>("movie") != null) {
+//            movie = intent?.getParcelableExtra<Movie>("movie")!!
+//            populateDetails()
+//        }
     }
     private fun populateDetails() {
         title.text = movie.title

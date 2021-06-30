@@ -30,7 +30,7 @@ class LatestMovieService : Service() {
     //api ključ
     private val tmdb_api_key : String = BuildConfig.TMDB_API_KEY
     //primjer filma- novi filmovi ne moraju sadržavati sve podatke
-    private var movie = Movie(1,"test","test","test","test","test")
+    private var movie = Movie(1,"test","test","test","test","test","test")
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -96,7 +96,7 @@ class LatestMovieService : Service() {
                 //Naglašavamo da je riječ o posebnoj aktivnosti koja samo služi za prikaz podataka notifikacije
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 //Kako smo ovdje poslali film?
-                putExtra("movie",movie)
+//                putExtra("movie",movie)
             }
             val notifyPendingIntent = PendingIntent.getActivity(
                 this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT

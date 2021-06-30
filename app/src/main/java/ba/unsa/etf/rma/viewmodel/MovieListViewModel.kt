@@ -11,8 +11,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MovieListViewModel(private val searchDone: ((movies: List<Movie>) -> Unit)?,
-                         private val onError: (()->Unit)?) {
+                         private val onError: (()->Unit)?, context: Context) {
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    val favoriteMovies = MovieRepository.getFavorites(context)
 
 //    fun search(query: String){
 //        // Kreira se Coroutine na UI
@@ -50,10 +51,6 @@ class MovieListViewModel(private val searchDone: ((movies: List<Movie>) -> Unit)
                 else-> onError?.invoke()
             }
         }
-    }
-
-    fun getRecentMovies(): List<Movie> {
-        return MovieRepository.getRecentMovies()
     }
 
     fun getUpcoming( onSuccess: (movies: List<Movie>) -> Unit,

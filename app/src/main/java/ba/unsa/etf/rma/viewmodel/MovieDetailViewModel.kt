@@ -23,14 +23,6 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
 //    }
 
     fun getMovieDetails(id: Long) {
-        val movies: ArrayList<Movie> = arrayListOf()
-        movies.addAll(MovieRepository.getFavoriteMovies())
-        movies.addAll(MovieRepository.getRecentMovies())
-
-        val movie = movies.find { movie -> movie.id == id }
-        if (movie != null)
-            movieRetrieved?.invoke(movie)
-        else {
             scope.launch {
                 // Vrši se poziv servisa i suspendira se rutina dok se `withContext` ne završi
                 val result = MovieRepository.getMovieDetails(id)
@@ -41,7 +33,6 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
                 }
             }
         }
-    }
 
     fun getMovieActors(id: Long) {
         scope.launch{
@@ -72,7 +63,7 @@ class MovieDetailViewModel(private val movieRetrieved: ((movie: Movie) -> Unit)?
     }
 
     fun getMovieById(id: Long): Movie {
-        var movie = Movie(0,"test","test","test","test","test")
+        var movie = Movie(0,"test","test","test","test","test","test")
         scope.launch{
             // Vrši se poziv servisa i suspendira se rutina dok se `withContext` ne završi
             // Prikaže se rezultat korisniku na glavnoj niti
